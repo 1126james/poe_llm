@@ -2,9 +2,10 @@ import asyncio
 import uuid
 import fastapi_poe as fp
 import time
+import os
 
 # Replace <api_key> with your actual API key, ensuring it is a string.
-api_key = 'xxx'
+api_key = os.getenv('API_KEY')
 
 # Define the role for the AI assistant
 role_description = """
