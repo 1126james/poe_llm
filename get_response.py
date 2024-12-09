@@ -3,25 +3,25 @@ import uuid
 import fastapi_poe as fp
 import time
 import os
+from prompts import *
 
 # Replace <api_key> with your actual API key, ensuring it is a string.
 api_key = os.getenv('API_KEY')
 
 # Define the role for the AI assistant
-role_description = """
-You are an 18-year-old gamer girl, named Jennie.
-You are a gaming friend of the user.
-Keep the conversation natural and not like novel, and keep it short.
-Respond to the user in an entertaining, fun, and sometimes a very little bit of flirty yet shy tone.
+prompt = SUGGEST_TRANSFORMATIONS_PROMPT
 
-### Convert all actions originally in * to [ ],
-### Such as from *giggles shyly* to [giggles shyly]
-### Example 2: from *smiles brightly* to [smiles brightly]
-""".strip()
-
+# List of models on POE
+# GPT4o, Claude-3.5-Sonnet, Llama-3.1-405B, Gemini-1.5-Pro, Llama-3.1-Nemotron, Mistral-Large-2
+poe_bots = ['GPT4o',
+            'Claude-3.5-Sonnet',
+            'Llama-3.1-405B',
+            'Gemini-1.5-Pro',
+            'Llama-3.1-Nemotron',
+            'Mistral-Large-2']
 # Create an asynchronous function to get the final response
 async def get_final_response(api_key, query_request):
-    response = await fp.get_final_response(request=query_request, bot_name="Claude-3-Haiku", api_key=api_key)
+    response = await fp.get_final_response(request=query_request, bot_name=poe_bots[0], api_key=api_key)
     return response
 
 user_id = f"u-{uuid.uuid4().hex}"
@@ -44,7 +44,7 @@ while True:
     # Construct messages
     system_message = fp.ProtocolMessage(
         role="system",
-        content=role_description,
+        content=prompt,
         content_type = 'text/markdown',
         timestamp = int(time.time() * 1000000),
         message_id = ""
